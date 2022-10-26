@@ -35,12 +35,8 @@ const numberIsnumber = (anyNumber) => {
 
         // Получение Диапазона чисел для игры
         let minMaxNumber = prompt(`Введите минимальное и масимальное число через запятую ' 1,100 ': `, '1,100').split(',');
-        console.log("-> minMaxNumber", minMaxNumber);
         minMaxNumber = numberIsnumber(minMaxNumber);
-        console.log("-> minMaxNumber", minMaxNumber);
         const [minNumber, maxNumber] = minMaxNumber;
-
-
 
         // Бот загадывает число
         const randomNumber = getRandom(minNumber, maxNumber);
@@ -75,7 +71,7 @@ const numberIsnumber = (anyNumber) => {
 
             if (Number.isNaN(parseFloat(lastAnswer)) && lastAnswer !== null) {
                 alert(`${lastAnswer} - не число`);
-                tryAmount++
+                tryAmount++;
                 console.log('-> Попытка не засчитывается');
                 playerNumber.pop();
                 playerNumber.push((lastAnswer = prompt(`Введи число! : `)));
