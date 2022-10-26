@@ -12,7 +12,6 @@ console.log('Сложное задание 2:');
 // • если попытки закончились игра прекращается
 
 
-
 const getRandom = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -20,95 +19,100 @@ const getRandom = (min, max) => {
     // The maximum is inclusive and the minimum is inclusive
 }
 
-const numberIsnumber = (anyNumber, typeNumber) => {
+const numberIsnumber = (anyNumber) => {
     while (Number.isNaN(parseFloat(anyNumber))) {
-        anyNumber = prompt(`Ошибка ${anyNumber} - не число, введи ${typeNumber} число : `);
-        console.log(`'${anyNumber}'`, anyNumber);
+        anyNumber = prompt(`Ошибка ${anyNumber} - не число, введи число : `);
+        // console.log(`'${anyNumber}'`, anyNumber);
     }
 }
-
-const minNumber = prompt(`Введите минимальное число : `, '1');
-numberIsnumber(minNumber, 'минимальное');
-
-const maxNumber = prompt(`Введите максимальное число : `, '100');
-numberIsnumber(maxNumber, 'максимальное');
-
-let tryAmount;
-
-if (maxNumber - minNumber > 50) {tryAmount = 15}
-else
-    {
-        tryAmount = Math.floor((maxNumber - minNumber) * 0.3);
-    }
-
-const checkTryAmount = () =>
-{
-    if (playerNumber.some((item) => item === lastAnswer)) {
-        console.log("-> tryAmount попытка не засчитывается вы уже вводили это число, попыток осталось: ", tryAmount);
-    } else {
-        tryAmount--;
-        console.log("-> tryAmount -1 попытка, попыток осталось: ", tryAmount);
-    }
-}
-console.log("-> tryAmount Попыток осталось ", tryAmount);
-
-    const randomNumber = getRandom(minNumber, maxNumber);
-    console.log('randomNumber =', randomNumber);
-
-const playerNumber = [];
-let lastAnswer;
-console.log("-> playerNumber", playerNumber);
-const findLastNumber = () => {
-    return parseInt(playerNumber[playerNumber.length - 1])
-}
+    //Функция игры
     const newGame = () => {
+        const playerNumber = [];
+        const findLastNumber = () => {
+            return parseInt(playerNumber[playerNumber.length - 1]);
+        }
 
-        playerNumber.push(lastAnswer = prompt('Угадай моё число! (выйти - отмена) : ', '50'));
-        console.log('findLastNumber()', findLastNumber(), playerNumber);
+        // Получение Диапазона чисел для игры
+        const minMaxNumber = prompt(`Введите минимальное и масимальное число через запятую ' 1,100 ': `, '1,100').split(',');
+        numberIsnumber(minMaxNumber[0]);
+        numberIsnumber(minMaxNumber[1]);
+        const [minNumber, maxNumber] = minMaxNumber;
+        numberIsnumber(minNumber);
+        numberIsnumber(maxNumber);
 
-        while (+findLastNumber() !== randomNumber) {
+
+        // Бот загадывает число
+        const randomNumber = getRandom(minNumber, maxNumber);
+        console.log('BOT randomNumber =', randomNumber);
+
+        //Запрашиваем первую попытку на отгадывание числа
+        let lastAnswer;
+        lastAnswer = +playerNumber.push(prompt('Угадай моё число! (выйти - отмена) : ', '50'));
+
+
+        //Вычисляем попытки
+        let tryAmount;
+
+        if (maxNumber - minNumber > 50) {tryAmount = 15} else {
+            tryAmount = Math.floor((maxNumber - minNumber) * 0.3);
+        }
+
+
+        // Цикл игры
+        for (tryAmount; tryAmount > 0 && +findLastNumber() !== randomNumber; tryAmount--) {
+
+            const returnTry = () => {
+                if (playerNumber.some((item) => item === lastAnswer)) {
+                    tryAmount++
+                    console.log("-> Попытка не засчитывается вы уже вводили это число");
+                }
+                else {
+                    console.log('-1 Попытка, осталось попыток: ', tryAmount);
+                }
+            }
+
 
             if (Number.isNaN(parseFloat(lastAnswer)) && lastAnswer !== null) {
                 alert(`${lastAnswer} - не число`);
-
+                tryAmount++
+                console.log('-> Попытка не засчитывается');
                 playerNumber.pop();
                 playerNumber.push((lastAnswer = prompt(`Введи число! : `)));
-                console.log('findLastNumber()', findLastNumber());
-                console.log("-> playerNumber", playerNumber);
+                // console.log('findLastNumber()', findLastNumber());
+                // console.log("-> playerNumber", playerNumber);
+                console.log('-> Осталось попыток: ', tryAmount);
 
             } else if (findLastNumber() < randomNumber && findLastNumber() !== null && tryAmount > 0) {
 
-                lastAnswer = prompt('Больше! : ', findLastNumber())
-
-                checkTryAmount();
-
+                lastAnswer = prompt('Больше! : ', findLastNumber());
+                returnTry(tryAmount);
                 playerNumber.push(lastAnswer);
-                console.log('findLastNumber()', findLastNumber());
-                console.log("-> playerNumber", playerNumber);
+                // console.log('findLastNumber()', findLastNumber());
+                // console.log("-> playerNumber", playerNumber);
             }
             else if (findLastNumber() > randomNumber && findLastNumber() !== null && tryAmount > 0) {
-                lastAnswer = prompt('Меньше! : ', findLastNumber())
-
-                checkTryAmount();
-
+                lastAnswer = prompt('Меньше! : ', findLastNumber());
+                returnTry(tryAmount);
                 playerNumber.push(lastAnswer);
-                console.log('findLastNumber()', findLastNumber());
-                console.log("-> playerNumber", playerNumber);
+                // console.log('findLastNumber()', findLastNumber());
+                // console.log("-> playerNumber", playerNumber);
             }
             else if (tryAmount <= 0) {
-                console.log("-> tryAmount Попыток осталось ", tryAmount);
+                // console.log("-> tryAmount Попыток осталось ", tryAmount);
                 return  alert(`Ваши попытки закончились, осталось ${tryAmount}  - попыток`);
             }
             else if (lastAnswer === null) {
+                console.log("-> playerNumber", playerNumber);
                 return alert('Заходи еще!');
             }
 
+            if (findLastNumber() === randomNumber) {
+                console.log("-> playerNumber", playerNumber);
+                // console.log(`playerNumber = randomNumber, ${lastAnswer} = ${randomNumber}`);
+                // console.log("-> tryAmount Попыток осталось ", tryAmount);
+                return alert(`Правильно! твой ответ: ${lastAnswer} совпал с моим: ${randomNumber}, Еще осталось попыток: ${tryAmount}`);
+            }
         }
-            console.log("-> playerNumber", playerNumber);
-            console.log(`playerNumber = randomNumber, ${lastAnswer} = ${randomNumber}`);
-            console.log("-> tryAmount Попыток осталось ", tryAmount);
-            return alert(`Правильно! твой ответ: ${lastAnswer} совпал с моим: ${randomNumber}, Еще осталось попыток: ${tryAmount}`);
-
     }
 
-newGame();
+newGame(); // Запуск игры
