@@ -21,9 +21,10 @@ const getRandom = (min, max) => {
 
 const numberIsnumber = (anyNumber) => {
     while (Number.isNaN(parseFloat(anyNumber))) {
-        anyNumber = prompt(`Ошибка ${anyNumber} - не число, введи число : `);
-        // console.log(`'${anyNumber}'`, anyNumber);
+        anyNumber = prompt(`Ошибка ${anyNumber} - не пара чисел, Введите минимальное и масимальное число через запятую ' 1,100 ': `, '1,100' ).split(',');
+        console.log("-> anyNumber", anyNumber);
     }
+    return anyNumber;
 }
     //Функция игры
     const newGame = () => {
@@ -33,12 +34,12 @@ const numberIsnumber = (anyNumber) => {
         }
 
         // Получение Диапазона чисел для игры
-        const minMaxNumber = prompt(`Введите минимальное и масимальное число через запятую ' 1,100 ': `, '1,100').split(',');
-        numberIsnumber(minMaxNumber[0]);
-        numberIsnumber(minMaxNumber[1]);
+        let minMaxNumber = prompt(`Введите минимальное и масимальное число через запятую ' 1,100 ': `, '1,100').split(',');
+        console.log("-> minMaxNumber", minMaxNumber);
+        minMaxNumber = numberIsnumber(minMaxNumber);
+        console.log("-> minMaxNumber", minMaxNumber);
         const [minNumber, maxNumber] = minMaxNumber;
-        numberIsnumber(minNumber);
-        numberIsnumber(maxNumber);
+
 
 
         // Бот загадывает число
